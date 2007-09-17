@@ -8,7 +8,7 @@ use warnings;
 
 use Template;
 
-our $VERSION = "0.01";
+our $VERSION = "0.02";
 
 sub default_tt_config {
 	return (
@@ -75,21 +75,66 @@ tt - Preprocess Perl code with Template Toolkit and Module::Compile.
 
 =head1 SYNOPSIS
 
-	use tt ( subs => [qw/foo bar gorch/] );
 
-	[% FOREACH subname IN subs %]
-	sub [% subname %] {
-		warn "Hi, i'm [% subname %]";
+	package Foo;
+
+	# between 'use tt' and 'no tt' the source code will
+	# be process by Template Toolkit.
+
+	# This example generates source code for accessors.
+	# the specific problem is best solved with L<Moose> or
+	# L<Class::Accessor>, but the principal remains the same
+
+	use tt ( fields => [qw/foo bar gorch/] );
+
+	[% FOREACH fields IN fields %]
+
+	sub [% field %] {
+		my $self = shift;
+		$self->{'[% field %]'} = shift if @_;
+		return $self->{'[% field %]'};
 	}
+
 	[% END %]
 
 	no tt;
+
+	package main;
+
+	my $obj = Foo->new;
+
+	$obj->bar("moose");
 
 =head1 DESCRIPTION
 
 This module uses Module::Compile to help you generate Perl code without using
 BEGIN/eval tricks and reducing readability, but without having to repeat
 yourself either.
+
+=head1 BUT SOURCE FILTERS BAD!!!!
+
+Yeah, source filters suck (normally) for two reasons, neither of which L<tt>
+suffers from:
+
+=over 4
+
+=item 1.
+
+They're kinda slow and may introduce fat dependencies for simple code.
+L<Module::Compile> fixes this.
+
+=item 2.
+
+They break down on edge cases. This is true for source filters that try to
+parse Perl, pretending to implement syntax extensions. Since L<tt> doesn't
+parse the perl code at all but operates on a very dumb string level it meets no
+edge cases.
+
+=back
+
+That said, string level preprocessing of source code sucks. However, since Perl
+doesn't have a convenient AST to write Lisp-style macros and deeper templates
+(that are aware of Perl's own semantics), this module does fill a niche.
 
 =head1 CONFIGURATION
 
@@ -134,6 +179,9 @@ Due to L<Module::Compile>'s semantics the use line is actually fudged and
 string-evaled by this module, so it might break and you can't refer to
 lexicals.
 
+All uppercase parameters on the use line are treated as configuration options.
+I may add a list of TT configuration params later on.
+
 =head1 TODO
 
 Add all sorts of useful variables about the package that the template is
@@ -144,6 +192,12 @@ Currently L<Module::Compile> doesn't provide enough facilities for this.
 =head1 SEE ALSO
 
 L<Template>, L<Module::Compile>, L<Filter::Simple>
+
+=head1 VERSION CONTROL
+
+This module is maintained using Darcs. You can get the latest version from
+L<http://nothingmuch.woobling.org/Module-Compile-TT/>, and use C<darcs send> to
+commit changes.
 
 =head1 AUTHOR
 

@@ -1,23 +1,14 @@
----
-name: Module-Compile-TT
-version: 0.01
-author:
-  - 'Yuval Kogman <nothingmuch@woobling.org>'
-abstract: Preprocess Perl code with Template Toolkit and Module::Compile.
-license: perl
-resources:
-  license: http://dev.perl.org/licenses/
-requires:
-  Module::Compile: 0
-  Template: 0
-  ok: 0
-provides:
-  Module::Compile::TT:
-    file: lib/Module/Compile/TT.pm
-  tt:
-    file: lib/tt.pm
-    version: 0.01
-generated_by: Module::Build version 0.2801
+--- #YAML:1.0
+name:                Module-Compile-TT
+version:             0.02
+abstract:            ~
+license:             ~
+generated_by:        ExtUtils::MakeMaker version 6.32
+distribution_type:   module
+requires:     
+    Module::Compile:               0
+    ok:                            0
+    Template:                      0
 meta-spec:
-  url: http://module-build.sourceforge.net/META-spec-v1.2.html
-  version: 1.2
+    url:     http://module-build.sourceforge.net/META-spec-v1.2.html
+    version: 1.2

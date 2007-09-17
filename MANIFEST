@@ -11,4 +11,3 @@ t/files/parse_error
 t/files/undef_ok
 t/files/undef_var
 t/use.t
-SIGNATURE    Added here by Module::Build
